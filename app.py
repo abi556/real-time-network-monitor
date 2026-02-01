@@ -151,3 +151,36 @@ with col1:
         st.metric("Edges", all_metrics['edges'])
     with col_info3:
         st.metric("Communities", len(set(community_dict.values())) if community_dict else 0)
+
+with col2:
+    st.markdown('<h2><i class="fas fa-chart-line"></i> Live Metrics</h2>', unsafe_allow_html=True)
+    
+    # Key metrics
+    st.metric("Density", f"{all_metrics['density']:.4f}")
+    st.metric("Avg Degree", f"{all_metrics['average_degree']:.2f}")
+    st.metric("Clustering", f"{all_metrics['clustering']:.4f}")
+    
+    if all_metrics['modularity']:
+        st.metric("Modularity", f"{all_metrics['modularity']:.4f}")
+    
+    st.markdown("---")
+    
+    # Connectivity status
+    if all_metrics['is_connected']:
+        st.markdown('<div style="color: green;"><i class="fas fa-check-circle"></i> Network is Connected</div>', unsafe_allow_html=True)
+        if all_metrics['diameter']:
+            st.metric("Diameter", all_metrics['diameter'])
+    else:
+        st.markdown(f'<div style="color: orange;"><i class="fas fa-exclamation-triangle"></i> {all_metrics["num_components"]} Components</div>', unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # Last update time
+    time_diff = (datetime.now() - st.session_state.last_update).total_seconds()
+    st.caption(f"Last updated: {st.session_state.last_update.strftime('%H:%M:%S')}")
+    st.caption(f"({int(time_diff)}s ago)")
+    
+    # Update statistics
+    stats = st.session_state.network_builder.get_network_stats()
+    st.markdown("---")
+    st.caption(f"Total updates: {stats['update_count']}")

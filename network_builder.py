@@ -39,6 +39,10 @@ class NetworkBuilder:
          )
         self.update_history.extend(updates)
         return updates
+    def get_network(self):
+        """Return current network copy"""
+        return self.G.copy()
+
 
 
 

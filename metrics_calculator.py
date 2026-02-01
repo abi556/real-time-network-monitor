@@ -20,3 +20,10 @@ class MetricsCalculator:
         m = self.G.number_of_edges()
         max_edges = n * (n - 1) / 2
         return m / max_edges if max_edges > 0 else 0.0
+    
+    def calculate_average_degree(self):
+        """Calculate average degree"""
+        if self.G.number_of_nodes() == 0:
+            return 0.0
+        degrees = dict(self.G.degree())
+        return sum(degrees.values()) / len(degrees)

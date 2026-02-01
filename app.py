@@ -71,3 +71,19 @@ if st.sidebar.button("Refresh Now", use_container_width=True):
     if updates:
         st.session_state.update_history_data.extend(updates)
     st.rerun()
+st.sidebar.markdown("---")
+
+# Network settings
+st.sidebar.markdown('<h3><i class="fas fa-network-wired"></i> Network Settings</h3>', unsafe_allow_html=True)
+network_type = st.sidebar.selectbox(
+    "Network Type",
+    ["barabasi_albert", "erdos_renyi", "watts_strogatz"],
+    index=0
+)
+
+if st.sidebar.button("Reset Network", use_container_width=True):
+    st.session_state.network_builder = NetworkBuilder()
+    st.session_state.network_builder.initialize_network()
+    st.session_state.update_history_data = []
+    st.session_state.metrics_history = []
+    st.rerun()

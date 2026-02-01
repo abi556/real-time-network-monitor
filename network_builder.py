@@ -5,4 +5,12 @@ import config
 
 class NetworkBuilder:
     """Manages network construction and updates"""
-    pass
+    def __init__(self):
+        self.G = nx.Graph()
+        self.simulator = DataSimulator(
+            num_nodes=config.INITIAL_NODES,
+            network_type=config.NETWORK_TYPE
+        )
+        self.update_history = []
+        self.initialized = False
+

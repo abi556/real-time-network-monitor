@@ -13,4 +13,17 @@ class NetworkBuilder:
         )
         self.update_history = []
         self.initialized = False
+    
+    def initialize_network(self):
+        """Initialize network with simulated data"""
+        if not self.initialized:
+            self.G = self.simulator.generate_initial_network()
+            self.initialized = True
+            self.update_history.append({
+                'type': 'initialize',
+                'timestamp': datetime.now(),
+                'nodes': self.G.number_of_nodes(),
+                'edges': self.G.number_of_edges()
+            })
+
 

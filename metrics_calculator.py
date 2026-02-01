@@ -11,3 +11,12 @@ class MetricsCalculator:
         self.G = network
         self._centrality_cache = {}
         self._community_cache = None
+    
+    def calculate_density(self):
+        """Calculate network density"""
+        n = self.G.number_of_nodes()
+        if n < 2:
+            return 0.0
+        m = self.G.number_of_edges()
+        max_edges = n * (n - 1) / 2
+        return m / max_edges if max_edges > 0 else 0.0

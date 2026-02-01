@@ -87,3 +87,16 @@ if st.sidebar.button("Reset Network", use_container_width=True):
     st.session_state.update_history_data = []
     st.session_state.metrics_history = []
     st.rerun()
+st.sidebar.markdown("---")
+
+# Visualization settings
+st.sidebar.markdown('<h3><i class="fas fa-palette"></i> Visualization Settings</h3>', unsafe_allow_html=True)
+layout_type = st.sidebar.selectbox(
+    "Layout Algorithm",
+    ["spring", "circular", "kamada_kawai"],
+    index=0
+)
+
+show_labels = st.sidebar.checkbox("Show Node Labels", value=True)
+
+st.sidebar.markdown("---")

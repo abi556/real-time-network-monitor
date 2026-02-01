@@ -40,3 +40,16 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+# Initialize session state
+if 'network_builder' not in st.session_state:
+    st.session_state.network_builder = NetworkBuilder()
+    st.session_state.network_builder.initialize_network()
+
+if 'last_update' not in st.session_state:
+    st.session_state.last_update = datetime.now()
+
+if 'update_history_data' not in st.session_state:
+    st.session_state.update_history_data = []
+
+if 'metrics_history' not in st.session_state:
+    st.session_state.metrics_history = []

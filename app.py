@@ -233,3 +233,21 @@ with col4:
         st.dataframe(df_top, use_container_width=True, hide_index=True)
     else:
         st.info(f"Centrality '{centrality_type}' not available for this network size")
+# Centrality comparison
+st.markdown("---")
+st.markdown('<h2><i class="fas fa-chart-bar"></i> Centrality Analysis</h2>', unsafe_allow_html=True)
+
+if centrality_metrics and centrality_metrics.get('degree'):
+    # Create comparison chart
+    centrality_df = pd.DataFrame(centrality_metrics)
+    centrality_df = centrality_df.head(20)  # Top 20 nodes
+    
+    if not centrality_df.empty:
+        fig_bar = px.bar(
+            centrality_df,
+            title="Top 20 Nodes: Centrality Comparison",
+            labels={'index': 'Node', 'value': 'Centrality Score'},
+            barmode='group'
+        )
+        fig_bar.update_layout(height=400)
+        st.plotly_chart(fig_bar, use_container_width=True)

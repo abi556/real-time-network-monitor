@@ -119,3 +119,35 @@ st.session_state.metrics_history.append({
 # Keep only last 100 entries
 if len(st.session_state.metrics_history) > 100:
     st.session_state.metrics_history = st.session_state.metrics_history[-100:]
+# Main content area
+col1, col2 = st.columns([2, 1])
+
+with col1:
+    st.markdown('<h2><i class="fas fa-sitemap"></i> Network Visualization</h2>', unsafe_allow_html=True)
+    
+    # Detect communities
+    community_dict = metrics_calc.detect_communities()
+    
+    # Calculate centrality
+    centrality_metrics = metrics_calc.calculate_centrality_metrics()
+    degree_cent = centrality_metrics.get('degree', {})
+    
+    # Create visualization
+    visualizer = NetworkVisualizer(G)
+    fig = visualizer.create_plotly_network(
+        community_dict=community_dict,
+        centrality_dict=degree_cent,
+        layout=layout_type,
+        show_labels=show_labels
+    )
+    
+    st.plotly_chart(fig, use_container_width=True, height=600)
+    
+    # Network info
+    col_info1, col_info2, col_info3 = st.columns(3)
+    with col_info1:
+        st.metric("Nodes", all_metrics['nodes'])
+    with col_info2:
+        st.metric("Edges", all_metrics['edges'])
+    with col_info3:
+        st.metric("Communities", len(set(community_dict.values())) if community_dict else 0)

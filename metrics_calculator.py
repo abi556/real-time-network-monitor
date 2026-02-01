@@ -73,3 +73,20 @@ class MetricsCalculator:
         
         self._centrality_cache = metrics
         return metrics
+    
+    def get_top_central_nodes(self, centrality_type='degree', top_k=None):
+        """Get top K most central nodes"""
+        if top_k is None:
+            top_k = config.TOP_K_NODES
+        
+        metrics = self.calculate_centrality_metrics()
+        
+        if centrality_type not in metrics or not metrics[centrality_type]:
+            return []
+        
+        sorted_nodes = sorted(
+            metrics[centrality_type].items(),
+            key=lambda x: x[1],
+            reverse=True
+        )
+        return sorted_nodes[:top_k]

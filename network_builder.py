@@ -42,6 +42,11 @@ class NetworkBuilder:
     def get_network(self):
         """Return current network copy"""
         return self.G.copy()
+    
+    def get_update_history(self, limit=100):
+        """Get recent update history"""
+        return self.update_history[-limit:]
+
 
 
 

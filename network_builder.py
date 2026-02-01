@@ -25,5 +25,12 @@ class NetworkBuilder:
                 'nodes': self.G.number_of_nodes(),
                 'edges': self.G.number_of_edges()
             })
+    
+    def update_network(self, add_edges=None, remove_edges=None):
+        """Update network with new edges"""
+        if add_edges is None:
+            add_edges = config.EDGES_TO_ADD_PER_UPDATE
+        if remove_edges is None:
+            remove_edges = config.EDGES_TO_REMOVE_PER_UPDATE
 
 

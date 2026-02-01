@@ -121,3 +121,19 @@ class MetricsCalculator:
             return nx.community.modularity(self.G, communities)
         except:
             return 0.0
+    
+    def get_all_metrics(self):
+        """Get all metrics in one call"""
+        return {
+            'nodes': self.G.number_of_nodes(),
+            'edges': self.G.number_of_edges(),
+            'density': self.calculate_density(),
+            'average_degree': self.calculate_average_degree(),
+            'clustering': self.calculate_clustering_coefficient(),
+            'modularity': self.calculate_modularity(),
+            'is_connected': nx.is_connected(self.G),
+            'num_components': nx.number_connected_components(self.G),
+            'diameter': nx.diameter(self.G) if nx.is_connected(self.G) else None,
+            'avg_path_length': nx.average_shortest_path_length(self.G) 
+                              if nx.is_connected(self.G) else None
+        }

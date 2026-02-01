@@ -100,3 +100,22 @@ layout_type = st.sidebar.selectbox(
 show_labels = st.sidebar.checkbox("Show Node Labels", value=True)
 
 st.sidebar.markdown("---")
+# Get current network
+G = st.session_state.network_builder.get_network()
+
+# Calculate metrics
+metrics_calc = MetricsCalculator(G)
+all_metrics = metrics_calc.get_all_metrics()
+
+# Store metrics history
+current_time = datetime.now()
+st.session_state.metrics_history.append({
+    'timestamp': current_time,
+    'nodes': all_metrics['nodes'],
+    'edges': all_metrics['edges'],
+    'density': all_metrics['density']
+})
+
+# Keep only last 100 entries
+if len(st.session_state.metrics_history) > 100:
+    st.session_state.metrics_history = st.session_state.metrics_history[-100:]

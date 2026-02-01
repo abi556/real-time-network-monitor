@@ -32,6 +32,29 @@ pip install -r requirements.txt
 python -m pip install -r requirements.txt
 ```
 
+### Alternative: Using GitHub Codespaces or VS Code Dev Containers
+
+This repository includes a `.devcontainer` configuration for easy setup:
+
+1. **GitHub Codespaces:**
+   - Click "Code" → "Codespaces" → "Create codespace on main"
+   - Wait for the container to build (dependencies install automatically)
+   - Run: `python -m streamlit run app.py`
+   - The dashboard will be accessible via the forwarded port
+
+2. **VS Code Dev Containers (Local):**
+   - Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+   - Open the project in VS Code
+   - Press `F1` → "Dev Containers: Reopen in Container"
+   - Wait for the container to build
+   - Run: `python -m streamlit run app.py`
+
+**Benefits:**
+- Pre-configured Python environment
+- All dependencies automatically installed
+- Consistent environment across machines
+- No local Python setup required
+
 ## Running the Dashboard
 
 ### Method 1: Using python -m (Recommended for Windows)

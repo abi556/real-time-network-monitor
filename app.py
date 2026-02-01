@@ -184,3 +184,52 @@ with col2:
     stats = st.session_state.network_builder.get_network_stats()
     st.markdown("---")
     st.caption(f"Total updates: {stats['update_count']}")
+# Filter section
+st.markdown("---")
+st.markdown('<h2><i class="fas fa-filter"></i> Filter Network</h2>', unsafe_allow_html=True)
+
+col3, col4 = st.columns(2)
+
+with col3:
+    st.subheader("Filter by Community")
+    if community_dict:
+        communities = sorted(set(community_dict.values()))
+        selected_communities = st.multiselect(
+            "Select communities to display",
+            communities,
+            default=communities,
+            key="community_filter"
+        )
+        
+        if selected_communities:
+            filtered_nodes = [node for node, comm in community_dict.items() 
+                            if comm in selected_communities]
+            G_filtered = G.subgraph(filtered_nodes)
+            
+            if G_filtered.number_of_nodes() > 0:
+                st.success(f"Showing {G_filtered.number_of_nodes()} nodes "
+                          f"from {len(selected_communities)} communities")
+            else:
+                st.warning("No nodes in selected communities")
+    else:
+        st.info("No communities detected")
+
+with col4:
+    st.subheader("Filter by Centrality")
+    centrality_type = st.selectbox(
+        "Centrality measure",
+        ['degree', 'betweenness', 'closeness', 'eigenvector'],
+        key="centrality_type"
+    )
+    
+    top_k = st.slider("Top K nodes", 5, 50, 10, key="top_k")
+    
+    # Get top central nodes
+    top_nodes = metrics_calc.get_top_central_nodes(centrality_type, top_k)
+    
+    if top_nodes:
+        st.write("**Top central nodes:**")
+        df_top = pd.DataFrame(top_nodes, columns=['Node', 'Centrality'])
+        st.dataframe(df_top, use_container_width=True, hide_index=True)
+    else:
+        st.info(f"Centrality '{centrality_type}' not available for this network size")

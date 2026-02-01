@@ -90,3 +90,26 @@ class MetricsCalculator:
             reverse=True
         )
         return sorted_nodes[:top_k]
+    
+    def detect_communities(self, force_recalculate=False):
+        """Detect communities using modularity optimization"""
+        if not force_recalculate and self._community_cache is not None:
+            return self._community_cache
+        
+        try:
+            if self.G.number_of_nodes() < 2:
+                return {}
+            
+            communities = nx.community.greedy_modularity_communities(self.G)
+            
+            # Create community dictionary
+            community_dict = {}
+            for i, community in enumerate(communities):
+                for node in community:
+                    community_dict[node] = i
+            
+            self._community_cache = community_dict
+            return community_dict
+        except Exception as e:
+            print(f"Community detection error: {e}")
+            return {}

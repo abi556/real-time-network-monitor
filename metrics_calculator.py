@@ -27,3 +27,9 @@ class MetricsCalculator:
             return 0.0
         degrees = dict(self.G.degree())
         return sum(degrees.values()) / len(degrees)
+    
+    def calculate_clustering_coefficient(self):
+        """Calculate average clustering coefficient"""
+        if self.G.number_of_nodes() == 0:
+            return 0.0
+        return nx.average_clustering(self.G)

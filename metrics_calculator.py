@@ -113,3 +113,11 @@ class MetricsCalculator:
         except Exception as e:
             print(f"Community detection error: {e}")
             return {}
+    
+    def calculate_modularity(self):
+        """Calculate network modularity"""
+        try:
+            communities = nx.community.greedy_modularity_communities(self.G)
+            return nx.community.modularity(self.G, communities)
+        except:
+            return 0.0

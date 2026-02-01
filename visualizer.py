@@ -1,4 +1,3 @@
-# visualizer.py
 import networkx as nx
 import plotly.graph_objects as go
 import numpy as np
@@ -76,4 +75,74 @@ class NetworkVisualizer:
                                   f'{int(colors[comm_id][1]*255)}, '
                                   f'{int(colors[comm_id][2]*255)})')
         else:
-            node_colors = ['lightblue'] * self.G.number_of_nodes()42)
+            node_colors = ['lightblue'] * self.G.number_of_nodes()
+        
+        # Get node sizes from centrality
+        if centrality_dict:
+            max_cent = max(centrality_dict.values()) if centrality_dict.values() else 1
+            min_cent = min(centrality_dict.values()) if centrality_dict.values() else 0
+            for node in self.G.nodes():
+                cent = centrality_dict.get(node, 0)
+                if max_cent > min_cent:
+                    normalized_cent = (cent - min_cent) / (max_cent - min_cent)
+                    size = 5 + normalized_cent * 15
+                else:
+                    size = 10
+                node_sizes.append(size)
+        else:
+            node_sizes = [10] * self.G.number_of_nodes()
+        
+        # Create hover text
+        for node in self.G.nodes():
+            info = f"Node: {node}<br>"
+            info += f"Degree: {self.G.degree(node)}<br>"
+            if community_dict and node in community_dict:
+                info += f"Community: {community_dict[node]}<br>"
+            if centrality_dict and node in centrality_dict:
+                info += f"Centrality: {centrality_dict[node]:.4f}"
+            node_info.append(info)
+        
+        # Set text based on show_labels parameter
+        if show_labels:
+            node_text = [str(node) for node in self.G.nodes()]
+            node_mode = 'markers+text'
+        else:
+            node_text = ['' for node in self.G.nodes()]
+            node_mode = 'markers'
+        
+        node_trace = go.Scatter(
+            x=node_x, y=node_y,
+            mode=node_mode,
+            hoverinfo='text',
+            text=node_text,
+            textposition="middle center",
+            textfont=dict(size=8),
+            hovertext=node_info,
+            marker=dict(
+                size=node_sizes,
+                color=node_colors,
+                line=dict(width=1, color='black'),
+                opacity=0.8
+            ),
+            name='Nodes'
+        )
+        
+        fig = go.Figure(
+            data=[edge_trace, node_trace],
+            layout=go.Layout(
+                title=dict(
+                    text='Interactive Network Graph',
+                    x=0.5,
+                    font=dict(size=20)
+                ),
+                showlegend=False,
+                hovermode='closest',
+                margin=dict(b=20, l=5, r=5, t=40),
+                xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                plot_bgcolor='white',
+                height=600
+            )
+        )
+        
+        return fig

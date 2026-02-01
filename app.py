@@ -53,3 +53,7 @@ if 'update_history_data' not in st.session_state:
 
 if 'metrics_history' not in st.session_state:
     st.session_state.metrics_history = []
+# Title
+st.markdown('<h1 class="main-header"><i class="fas fa-project-diagram"></i> Real-Time Network Monitoring Dashboard</h1>', 
+            unsafe_allow_html=True)
+st.markdown("---")

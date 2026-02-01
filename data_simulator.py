@@ -40,7 +40,11 @@ class DataSimulator:
             return updates
         
         # Add edges
+        attempts = 0
+        max_attempts = add_edges * 10  # Prevent infinite loop
         for _ in range(add_edges):
+            if attempts >= max_attempts:
+                break
             # Select two random nodes
             node1, node2 = random.sample(nodes, 2)
             
@@ -53,6 +57,7 @@ class DataSimulator:
                     'node2': node2,
                     'timestamp': datetime.now()
                 })
+            attempts += 1
         
         # Remove edges (optional)
         edges = list(G.edges())

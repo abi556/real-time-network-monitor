@@ -37,7 +37,7 @@ class MetricsCalculator:
     def calculate_centrality_metrics(self, force_recalculate=False):
         """Calculate various centrality measures"""
         if not force_recalculate and self._centrality_cache:
-            return self._centrality_cache
+            return self._centrality_cache.copy()  # Return copy to prevent external modification
         
         metrics = {}
         
@@ -72,7 +72,7 @@ class MetricsCalculator:
             metrics['eigenvector'] = {}
         
         self._centrality_cache = metrics
-        return metrics
+        return metrics.copy()  # Return copy to prevent external modification
     
     def get_top_central_nodes(self, centrality_type='degree', top_k=None):
         """Get top K most central nodes"""

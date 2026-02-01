@@ -66,11 +66,15 @@ class NetworkVisualizer:
         node_colors = []
         
         # Get node colors from communities
-        if community_dict:
-            num_communities = len(set(community_dict.values())) if community_dict else 1
+        if community_dict and len(community_dict) > 0:
+            num_communities = len(set(community_dict.values()))
+            if num_communities == 0:
+                num_communities = 1
             colors = plt.cm.Set3(np.linspace(0, 1, max(num_communities, 1)))
             for node in self.G.nodes():
                 comm_id = community_dict.get(node, 0)
+                # Ensure comm_id is within bounds
+                comm_id = min(comm_id, len(colors) - 1) if len(colors) > 0 else 0
                 node_colors.append(f'rgb({int(colors[comm_id][0]*255)}, '
                                   f'{int(colors[comm_id][1]*255)}, '
                                   f'{int(colors[comm_id][2]*255)})')
@@ -78,9 +82,9 @@ class NetworkVisualizer:
             node_colors = ['lightblue'] * self.G.number_of_nodes()
         
         # Get node sizes from centrality
-        if centrality_dict:
-            max_cent = max(centrality_dict.values()) if centrality_dict.values() else 1
-            min_cent = min(centrality_dict.values()) if centrality_dict.values() else 0
+        if centrality_dict and len(centrality_dict) > 0:
+            max_cent = max(centrality_dict.values())
+            min_cent = min(centrality_dict.values())
             for node in self.G.nodes():
                 cent = centrality_dict.get(node, 0)
                 if max_cent > min_cent:

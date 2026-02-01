@@ -78,14 +78,19 @@ st.sidebar.markdown('<h3><i class="fas fa-network-wired"></i> Network Settings</
 network_type = st.sidebar.selectbox(
     "Network Type",
     ["barabasi_albert", "erdos_renyi", "watts_strogatz"],
-    index=0
+    index=0,
+    help="Note: Changing this requires resetting the network to take effect"
 )
 
 if st.sidebar.button("Reset Network", use_container_width=True):
+    # Reset network builder with current network type
     st.session_state.network_builder = NetworkBuilder()
+    # Update network type before initializing
+    st.session_state.network_builder.simulator.network_type = network_type
     st.session_state.network_builder.initialize_network()
     st.session_state.update_history_data = []
     st.session_state.metrics_history = []
+    st.session_state.last_update = datetime.now()
     st.rerun()
 st.sidebar.markdown("---")
 
@@ -107,18 +112,22 @@ G = st.session_state.network_builder.get_network()
 metrics_calc = MetricsCalculator(G)
 all_metrics = metrics_calc.get_all_metrics()
 
-# Store metrics history
-current_time = datetime.now()
-st.session_state.metrics_history.append({
-    'timestamp': current_time,
-    'nodes': all_metrics['nodes'],
-    'edges': all_metrics['edges'],
-    'density': all_metrics['density']
-})
-
-# Keep only last 100 entries
-if len(st.session_state.metrics_history) > 100:
-    st.session_state.metrics_history = st.session_state.metrics_history[-100:]
+# Store metrics history (only if network actually changed)
+# Check if this is a new update by comparing with last entry
+if not st.session_state.metrics_history or \
+   (st.session_state.metrics_history[-1]['nodes'] != all_metrics['nodes'] or
+    st.session_state.metrics_history[-1]['edges'] != all_metrics['edges']):
+    current_time = datetime.now()
+    st.session_state.metrics_history.append({
+        'timestamp': current_time,
+        'nodes': all_metrics['nodes'],
+        'edges': all_metrics['edges'],
+        'density': all_metrics['density']
+    })
+    
+    # Keep only last 100 entries
+    if len(st.session_state.metrics_history) > 100:
+        st.session_state.metrics_history = st.session_state.metrics_history[-100:]
 # Main content area
 col1, col2 = st.columns([2, 1])
 
@@ -160,7 +169,7 @@ with col2:
     st.metric("Avg Degree", f"{all_metrics['average_degree']:.2f}")
     st.metric("Clustering", f"{all_metrics['clustering']:.4f}")
     
-    if all_metrics['modularity']:
+    if all_metrics['modularity'] is not None:
         st.metric("Modularity", f"{all_metrics['modularity']:.4f}")
     
     st.markdown("---")
@@ -168,7 +177,7 @@ with col2:
     # Connectivity status
     if all_metrics['is_connected']:
         st.markdown('<div style="color: green;"><i class="fas fa-check-circle"></i> Network is Connected</div>', unsafe_allow_html=True)
-        if all_metrics['diameter']:
+        if all_metrics['diameter'] is not None:
             st.metric("Diameter", all_metrics['diameter'])
     else:
         st.markdown(f'<div style="color: orange;"><i class="fas fa-exclamation-triangle"></i> {all_metrics["num_components"]} Components</div>', unsafe_allow_html=True)
@@ -237,7 +246,7 @@ with col4:
 st.markdown("---")
 st.markdown('<h2><i class="fas fa-chart-bar"></i> Centrality Analysis</h2>', unsafe_allow_html=True)
 
-if centrality_metrics and centrality_metrics.get('degree'):
+if centrality_metrics and centrality_metrics.get('degree') and len(centrality_metrics.get('degree', {})) > 0:
     # Create comparison chart
     centrality_df = pd.DataFrame(centrality_metrics)
     centrality_df = centrality_df.head(20)  # Top 20 nodes

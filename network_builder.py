@@ -33,10 +33,10 @@ class NetworkBuilder:
         if remove_edges is None:
             remove_edges = config.EDGES_TO_REMOVE_PER_UPDATE
         updates = self.simulator.simulate_update(
-         self.G, 
-         add_edges=add_edges,
-         remove_edges=remove_edges
-         )
+            self.G, 
+            add_edges=add_edges,
+            remove_edges=remove_edges
+        )
         self.update_history.extend(updates)
         return updates
     

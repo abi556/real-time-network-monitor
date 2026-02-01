@@ -57,3 +57,17 @@ if 'metrics_history' not in st.session_state:
 st.markdown('<h1 class="main-header"><i class="fas fa-project-diagram"></i> Real-Time Network Monitoring Dashboard</h1>', 
             unsafe_allow_html=True)
 st.markdown("---")
+# Sidebar
+st.sidebar.markdown('<h2><i class="fas fa-cog"></i> Dashboard Controls</h2>', unsafe_allow_html=True)
+
+# Auto-refresh toggle
+auto_refresh = st.sidebar.checkbox("Auto-refresh", value=False)
+refresh_interval = st.sidebar.slider("Refresh interval (seconds)", 1, 60, 5)
+
+# Manual refresh button
+if st.sidebar.button("Refresh Now", use_container_width=True):
+    updates = st.session_state.network_builder.update_network()
+    st.session_state.last_update = datetime.now()
+    if updates:
+        st.session_state.update_history_data.extend(updates)
+    st.rerun()

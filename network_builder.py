@@ -39,9 +39,26 @@ class NetworkBuilder:
          )
         self.update_history.extend(updates)
         return updates
+    
     def get_network(self):
         """Return current network copy"""
         return self.G.copy()
+    
+    def get_update_history(self, limit=100):
+        """Get recent update history"""
+        return self.update_history[-limit:]
+    
+    def get_network_stats(self):
+        """Get basic network statistics"""
+        return {
+            'nodes': self.G.number_of_nodes(),
+            'edges': self.G.number_of_edges(),
+            'is_connected': nx.is_connected(self.G),
+            'num_components': nx.number_connected_components(self.G),
+            'update_count': len(self.update_history)
+        }
+
+
 
 
 

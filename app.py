@@ -251,3 +251,42 @@ if centrality_metrics and centrality_metrics.get('degree'):
         )
         fig_bar.update_layout(height=400)
         st.plotly_chart(fig_bar, use_container_width=True)
+# Network evolution over time
+st.markdown("---")
+st.markdown('<h2><i class="fas fa-chart-area"></i> Network Evolution</h2>', unsafe_allow_html=True)
+
+if len(st.session_state.metrics_history) > 1:
+    history_df = pd.DataFrame(st.session_state.metrics_history)
+    
+    col_evo1, col_evo2 = st.columns(2)
+    
+    with col_evo1:
+        fig_nodes = px.line(
+            history_df,
+            x='timestamp',
+            y='nodes',
+            title='Number of Nodes Over Time',
+            labels={'nodes': 'Nodes', 'timestamp': 'Time'}
+        )
+        st.plotly_chart(fig_nodes, use_container_width=True)
+    
+    with col_evo2:
+        fig_edges = px.line(
+            history_df,
+            x='timestamp',
+            y='edges',
+            title='Number of Edges Over Time',
+            labels={'edges': 'Edges', 'timestamp': 'Time'}
+        )
+        st.plotly_chart(fig_edges, use_container_width=True)
+    
+    fig_density = px.line(
+        history_df,
+        x='timestamp',
+        y='density',
+        title='Network Density Over Time',
+        labels={'density': 'Density', 'timestamp': 'Time'}
+    )
+    st.plotly_chart(fig_density, use_container_width=True)
+else:
+    st.info("Network evolution data will appear after updates")

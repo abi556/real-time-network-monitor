@@ -290,3 +290,26 @@ if len(st.session_state.metrics_history) > 1:
     st.plotly_chart(fig_density, use_container_width=True)
 else:
     st.info("Network evolution data will appear after updates")
+# Update history
+st.markdown("---")
+st.markdown('<h2><i class="fas fa-history"></i> Recent Updates</h2>', unsafe_allow_html=True)
+
+if st.session_state.update_history_data:
+    recent_updates = st.session_state.update_history_data[-20:]  # Last 20 updates
+    updates_df = pd.DataFrame(recent_updates)
+    st.dataframe(updates_df, use_container_width=True, hide_index=True)
+else:
+    st.info("No updates yet. Click 'Refresh Now' to simulate network updates.")
+
+# Footer
+st.markdown("---")
+st.markdown('<p style="text-align: center; color: #666;"><i class="fas fa-project-diagram"></i> Network Monitoring Dashboard | Real-time Network Analysis</p>', unsafe_allow_html=True)
+
+# Auto-refresh logic
+if auto_refresh:
+    time.sleep(refresh_interval)
+    updates = st.session_state.network_builder.update_network()
+    st.session_state.last_update = datetime.now()
+    if updates:
+        st.session_state.update_history_data.extend(updates)
+    st.rerun()

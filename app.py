@@ -18,3 +18,25 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+# Custom CSS with Font Awesome
+st.markdown("""
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .main-header {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #1f77b4;
+        text-align: center;
+    }
+    .metric-card {
+        background-color: #f0f2f6;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #1f77b4;
+    }
+    .icon {
+        margin-right: 8px;
+        color: #1f77b4;
+    }
+</style>
+""", unsafe_allow_html=True)

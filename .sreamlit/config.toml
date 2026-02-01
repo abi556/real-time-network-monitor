@@ -1,0 +1,6 @@
+# Theme configuration removed to allow user theme selection
+# Users can now choose System, Light, or Dark theme from Settings menu (top right > Settings)
+# The app will use your device's system theme by default
+
+[server]
+headless = true
